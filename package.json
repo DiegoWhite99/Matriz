@@ -1,0 +1,41 @@
+{
+  "name": "matriz-hardware-ia",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Sistema de comparación de hardware para IA industrial con agente generador de informes",
+  "scripts": {
+    "dev": "vite",
+    "dev:emulado": "vite --mode emulado",
+    "emuladores": "npm --prefix functions run build && firebase emulators:start --project demo-matriz-hardware --only functions,firestore,auth",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "test:glosario": "node --experimental-strip-types src/data/glosario.test.ts",
+    "test:scoring": "node --experimental-strip-types src/lib/scoring.test.ts",
+    "test:modelos": "node --experimental-strip-types src/lib/modelos.test.ts",
+    "test:software": "node --experimental-strip-types src/data/software.test.ts",
+    "test:dispositivos": "node --experimental-strip-types src/data/dispositivos.test.ts",
+    "test:conceptos": "node --experimental-strip-types src/data/conceptos.test.ts",
+    "test": "npm run test:dispositivos && npm run test:scoring && npm run test:modelos && npm run test:software && npm run test:glosario && npm run test:conceptos",
+    "deploy": "npm run build && firebase deploy",
+    "deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "firebase": "^11.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.6",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}

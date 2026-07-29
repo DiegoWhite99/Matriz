@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matriz de Hardware IA · Sistema de comparación</title>
+    <meta
+      name="description"
+      content="Comparador de hardware para inteligencia artificial industrial: métricas, gráficos y generación de informes por caso de uso."
+    />
+    <script>
+      // Tema antes del primer pintado, para evitar el flash de color.
+      (function () {
+        var saved = localStorage.getItem('mhia-theme')
+        var os = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        document.documentElement.dataset.theme = saved || os
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
