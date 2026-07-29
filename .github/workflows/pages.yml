@@ -21,9 +21,9 @@ jobs:
   construir:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -34,12 +34,12 @@ jobs:
       # sitio publicado mostraría cifras incorrectas.
       - run: npm test
 
+      # Requiere que Pages ya esté activado en Ajustes → Pages, con origen
+      # «GitHub Actions». Ese primer paso es manual: el GITHUB_TOKEN no tiene
+      # permiso para crear el sitio, sólo para publicar en uno que ya existe.
       - name: Configurar Pages
         id: pages
-        # enablement activa Pages en el repositorio si aún no lo estaba.
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
+        uses: actions/configure-pages@v6
 
       - name: Construir
         run: npm run build
@@ -48,7 +48,7 @@ jobs:
           # así que un renombrado no rompe las rutas de los assets.
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -60,4 +60,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
