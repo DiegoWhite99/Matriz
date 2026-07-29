@@ -1,0 +1,63 @@
+name: Publicar en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Permite relanzar el despliegue a mano desde la pestaña Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un despliegue a la vez. No cancelamos el que ya esté en curso: dejar Pages
+# a medio publicar es peor que esperar.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Los tests son cálculo puro sobre los datos de la matriz: si fallan, el
+      # sitio publicado mostraría cifras incorrectas.
+      - run: npm test
+
+      - name: Configurar Pages
+        id: pages
+        # enablement activa Pages en el repositorio si aún no lo estaba.
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Construir
+        run: npm run build
+        env:
+          # base_path lo calcula configure-pages a partir del nombre del repo,
+          # así que un renombrado no rompe las rutas de los assets.
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  desplegar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
